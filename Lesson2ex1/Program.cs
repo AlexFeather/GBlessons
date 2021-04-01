@@ -62,8 +62,7 @@ namespace lesson2
 
         static void Main(string[] args)
         {
-
-
+            Menu();
         }
 
         static void Menu()
@@ -118,11 +117,21 @@ namespace lesson2
             maxT = TryParseTemp(Console.ReadLine());
             averageT = (minT + maxT) / 2;
             Console.WriteLine($"Средняя температура за сутки равна {averageT} градусов.");
+            averageTempUsed = true;
         }
 
         static void CurMonth()
         {
-
+            int enteredNumber;
+            Console.WriteLine("Введите номер текущего месяца:");
+            if (int.TryParse(Console.ReadLine(), out enteredNumber))
+            {
+                if (enteredNumber > 0 && enteredNumber < 13)
+                {
+                    curMonth = (Months)enteredNumber;
+                    Console.WriteLine($"Текущий месяц: {curMonth}");
+                }
+            }
         }
 
         static void IsEven()

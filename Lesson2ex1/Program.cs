@@ -101,15 +101,21 @@ namespace lesson2
                         break;
                     case 5:
                         Console.WriteLine("Такое задание есть, но результат его выполнения вызывается по-другому.");
+                        Menu();
                         break;
                     case 6:
                         OfficeSchedule();
+                        Menu();
                         break;
                     default:
                         Console.WriteLine("Задачи с таким номером в задании нет.");
+                        Menu();
                         break;
                 }
-
+            }
+            else
+            {
+                Console.WriteLine("Введенное Вами значение не является числом.");
             }
         }
 

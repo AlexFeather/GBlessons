@@ -56,11 +56,6 @@ namespace lesson2
             Воскресенье = 0b_0000001
         }
 
-        days weekdays = days.Понедельник | days.Вторник | days.Среда | days.Четверг | days.Пятница;
-        days holidays = days.Суббота | days.Воскресенье;
-        days fullweek = days.Понедельник | days.Вторник | days.Среда | days.Четверг | days.Пятница | days.Суббота | days.Воскресенье;
-        days shortweek = days.Вторник | days.Среда | days.Четверг | days.Пятница;
-
         static void Main(string[] args)
         {
             Menu();
@@ -179,7 +174,32 @@ namespace lesson2
 
         static void OfficeSchedule()
         {
+            days weekdays = days.Понедельник | days.Вторник | days.Среда | days.Четверг | days.Пятница;
+            days holidays = days.Суббота | days.Воскресенье;
+            days shortweek = days.Вторник | days.Среда | days.Четверг | days.Пятница;
 
+            days schedule1 = (days)0b_1111100;
+
+            days shortWorking = schedule1 & shortweek;
+            days weekWorking = schedule1 & weekdays;
+            days holidayWorking = schedule1 & holidays;
+
+            bool isShortweek = shortWorking == shortweek;
+            bool isWeekdays = weekWorking == weekdays;
+            bool isHolidays = holidayWorking == holidays;
+
+            //bool isShortweek = schedule1 == shortweek;
+            //bool isWeekdays = schedule1 == weekdays;
+            //bool isHolidays = schedule1 == holidays;
+
+            if (isShortweek & !isWeekdays & !isHolidays)
+                Console.WriteLine("Офис работает сокращенную неделю (Вторник-Пятница).");
+            if (isWeekdays & !isHolidays)
+                Console.WriteLine("Офис работает полную рабочую неделю (Пондельник-Пятница).");
+            if (isHolidays & !isWeekdays)
+                Console.WriteLine("Офис работает только по выходным (Суббота-Воскресенье).");
+            if (isWeekdays & isHolidays)
+                Console.WriteLine("Офис работает без выходных (Понедельник-Воскресенье).");
         }
 
         static float TryParseTemp(string Input)

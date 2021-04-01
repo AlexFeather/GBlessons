@@ -88,9 +88,11 @@ namespace lesson2
                         CurMonth();
                         if (averageTempUsed)
                             SeasonInfo();
+                        Menu();
                         break;
                     case 3:
                         IsEven();
+                        Menu();
                         break;
                     case 4:
                         CheckInfo();
@@ -136,7 +138,22 @@ namespace lesson2
 
         static void IsEven()
         {
-
+            Console.WriteLine("Введите целое число:");
+            if (int.TryParse(Console.ReadLine(), out int result))
+            {
+                if (result % 2 == 0)
+                {
+                    Console.WriteLine("Число четное.");
+                }
+                else
+                {
+                    Console.WriteLine("Число нечетное.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Введенное Вами значение не является числом.");
+            }
         }
 
         static void CheckInfo()

@@ -33,16 +33,17 @@ namespace lesson2
         static int checkNumber = 25;
         static float sum = 3000.00f;
 
-        static string check = $"{bank}" +
-            $"{restaurant}" +
-            $"{restaurantAdress}" +
-            $"Оплата по счету, чек № {checkNumber}" +
-            $"Безналичный расчет" +
-            $"Сумма (руб):" +
-            $"{sum}" +
-            $"Выдано иностранцу с табуреткой." +
-            $"Подтверждается, что слона он купил в нашем магазине." +
-            $"Покупайте наших слонов!";
+        static string check = @$"
+            {bank} 
+            {restaurant}
+            {restaurantAdress}
+            Оплата по счету, чек № {checkNumber}
+            Безналичный расчет
+            Сумма (руб):
+            {sum}
+            Выдано иностранцу с табуреткой.
+            Подтверждается, что слона он купил в нашем магазине.
+            Покупайте наших слонов!";
 
         enum days
         {
@@ -96,6 +97,7 @@ namespace lesson2
                         break;
                     case 4:
                         CheckInfo();
+                        Menu();
                         break;
                     case 5:
                         Console.WriteLine("Такое задание есть, но результат его выполнения вызывается по-другому.");
@@ -158,12 +160,15 @@ namespace lesson2
 
         static void CheckInfo()
         {
-
+            Console.WriteLine(check);
         }
 
         static void SeasonInfo()
         {
-
+            if((curMonth == Months.Декабрь || curMonth == Months.Январь || curMonth == Months.Февраль) && averageT > 0)
+            {
+                Console.WriteLine("Дождливая зима");
+            }
         }
 
         static void OfficeSchedule()

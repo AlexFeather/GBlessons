@@ -32,7 +32,7 @@ namespace Lesson3
 
         class PhoneBook
         {
-            string[,] contacts = new string[5, 2];
+            static string[,] contacts = new string[5, 2];
 
             static string path = @"\contactlist.xml";
 
@@ -49,6 +49,36 @@ namespace Lesson3
             static void AddContact()
             {
 
+                if(EmptyLineSearch(out int line))
+                {
+                    Console.WriteLine("Введите имя контакта:");
+                    contacts[line, 0] = Console.ReadLine();
+                    Console.WriteLine("Введите контактную информацию:");
+                    contacts[line, 1] = Console.ReadLine();
+                }
+                else 
+                {
+                    Console.WriteLine("В справочнике не осталось свободных строк!");
+                    Menu();
+                }
+            }
+
+            static bool EmptyLineSearch(out int line)
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    if (string.IsNullOrEmpty(contacts[i, 0]))
+                    {
+                        line = i;
+                        return true;
+                    }
+                    else
+                    {
+
+                    }
+                }
+                line = -1;
+                return false;
             }
 
             static void RemoveContact()

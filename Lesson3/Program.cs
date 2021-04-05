@@ -38,12 +38,17 @@ namespace Lesson3
 
             static void NavMenu()
             {
-
+                Console.WriteLine(@"
+            Выберите дейсвтие:
+            1. Вывести список контактов.
+            2. Создать новый контакт.
+            3. Удалить существующий контакт.
+            4. Возврат.");
             }
 
             static void ContactList()
             {
-
+                Console.WriteLine(contacts);
             }
 
             static void AddContact()
@@ -55,6 +60,8 @@ namespace Lesson3
                     contacts[line, 0] = Console.ReadLine();
                     Console.WriteLine("Введите контактную информацию:");
                     contacts[line, 1] = Console.ReadLine();
+                    SaveList(contacts, path);
+                    Console.WriteLine("Контакт создан.");
                 }
                 else 
                 {
@@ -72,10 +79,6 @@ namespace Lesson3
                         line = i;
                         return true;
                     }
-                    else
-                    {
-
-                    }
                 }
                 line = -1;
                 return false;
@@ -83,7 +86,31 @@ namespace Lesson3
 
             static void RemoveContact()
             {
+                Console.WriteLine("Введите точное имя контакта для его удаления:");
+                if(NameSearch(Console.ReadLine(), out int line))
+                {
+                    contacts[line, 0] = null;
+                    contacts[line, 1] = null;
+                    SaveList(contacts, path);
+                    Console.WriteLine("Контакт удален.");
+                }
 
+            }
+
+            static bool NameSearch(string name, out int line)
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    if(contacts[i,0] == name)
+                    {
+                        Console.WriteLine($"Контакт с именем {name} найден.");
+                        line = i;
+                        return true;
+                    }
+                }
+                line = -1;
+                Console.WriteLine($"Контакта с именем {name} не найдено.");
+                return false;
             }
 
             static void SaveList(string[,] list, string path)
@@ -108,12 +135,13 @@ namespace Lesson3
                 return loadedMass;
             }
 
-            static void FileCheck()
+            static void Initialization()
             {
                 if (!File.Exists(path))
                 {
                     File.Create(path);
                 }
+                LoadList(path);
             }
         }
     }

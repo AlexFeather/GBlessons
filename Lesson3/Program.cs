@@ -9,7 +9,7 @@ namespace Lesson3
     {
         static void Main(string[] args)
         {
-
+            Menu();
         }
 
         static void Menu()
@@ -43,12 +43,14 @@ namespace Lesson3
                         break;
                     default:
                         Console.WriteLine("Выбранного Вами задания не существует.");
+                        Menu();
                         break;
                 }
             }
             else
             {
                 Console.WriteLine("Введенное Вами значение не является числом.");
+                Menu();
             }
         }
 
@@ -117,26 +119,20 @@ namespace Lesson3
             if (int.TryParse(Console.ReadLine(), out turn))
             {
                 int realTurn = turn % 6;
-                int origPos = 0;
-                int destPos;
-                int temp = barell[origPos];
-                int temp2;
-                for (int i = 0; i < barell.Length; i++)
+                if (realTurn < 0)
+                    realTurn += 6;
+                for (int i = 1; i <= realTurn; i++)
                 {
-                    destPos = origPos + realTurn;
-
-
-                    if (destPos < 0)
-                        destPos += 6;
-                    else if (destPos >= 6)
-                        destPos -= 6;
-
-                    temp2 = barell[destPos];
-                    barell[destPos] = temp;
-                    origPos = destPos;
-                    temp = temp2;
-
+                    int temp = barell[5];
+                     
+                    for (int j = 5; j > 0; j--)
+                    {
+                            int k = j - 1;
+                            barell[j] = barell[k];
+                    }
+                    barell[0] = temp;
                 }
+
 
                 string result = null;
 

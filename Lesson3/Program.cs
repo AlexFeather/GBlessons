@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using System.Threading.Channels;
 using System.Xml.Serialization;
 
 namespace Lesson3
@@ -76,7 +75,13 @@ namespace Lesson3
 
                 static void ContactList()
                 {
-                    Console.WriteLine(contacts.ToString());
+                    foreach(string[] element in contacts)
+                    {
+                        if(!string.IsNullOrEmpty(element[0]))
+                        {
+                            Console.WriteLine($"{element[0]} {element[1]}");
+                        }
+                    }
                     NavMenu();
                 }
 

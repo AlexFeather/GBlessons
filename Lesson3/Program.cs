@@ -9,7 +9,7 @@ namespace Lesson3
     {
         static void Main(string[] args)
         {
-            Revolver();
+
         }
 
         static void Menu()
@@ -18,8 +18,38 @@ namespace Lesson3
             Выберите задачу, решение которой нужно вывести:
             1.Вывод по диагонали.
             2.Справочник.
-            3.Адмирал?
-            4.Вращение барабана.");
+            3.Обратное чтение.
+            4.Адмирал?
+            5.Вращение барабана.");
+
+            if (int.TryParse(Console.ReadLine(), out int result))
+            {
+                switch (result)
+                {
+                    case 1:
+                        DiagonalRead();
+                        break;
+                    case 2:
+                        PhoneBook.NavMenu();
+                        break;
+                    case 3:
+                        ReverseReading();
+                        break;
+                    case 4:
+                        SeaFight();
+                        break;
+                    case 5:
+                        Revolver();
+                        break;
+                    default:
+                        Console.WriteLine("Выбранного Вами задания не существует.");
+                        break;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Введенное Вами значение не является числом.");
+            }
         }
 
         static void DiagonalRead()
@@ -34,6 +64,7 @@ namespace Lesson3
             {
                 Console.WriteLine(mass1[i, i]);
             }
+            Menu();
         }
 
         static void ReverseReading()
@@ -48,6 +79,7 @@ namespace Lesson3
                 j++;
             }
             Console.WriteLine(reverseString);
+            Menu();
         }
 
         static void SeaFight()
@@ -74,6 +106,7 @@ namespace Lesson3
                 }
                 Console.WriteLine(row);
             }
+            Menu();
         }
 
         static void Revolver()
@@ -91,7 +124,7 @@ namespace Lesson3
                 for (int i = 0; i < barell.Length; i++)
                 {
                     destPos = origPos + realTurn;
-                    
+
 
                     if (destPos < 0)
                         destPos += 6;
@@ -112,8 +145,9 @@ namespace Lesson3
                     result += $"{element} ";
                 }
                 Console.WriteLine(result);
-                if(barell[0] == 6)
+                if (barell[0] == 6)
                     Console.WriteLine("СЕКТОР ПРИЗ НА БАРАБАНЕ!.. Не удержался...");
+                Menu();
             }
             else
             {
@@ -155,6 +189,7 @@ namespace Lesson3
                             RemoveContact();
                             break;
                         case 4:
+                            Menu();
                             break;
                         default:
                             Console.WriteLine("Указанного Вами действия не существует.");

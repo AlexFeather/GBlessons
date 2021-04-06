@@ -9,12 +9,17 @@ namespace Lesson3
     {
         static void Main(string[] args)
         {
-            ReverseReading();
+            Revolver();
         }
 
         static void Menu()
         {
-
+            Console.WriteLine(@"
+            Выберите задачу, решение которой нужно вывести:
+            1.Вывод по диагонали.
+            2.Справочник.
+            3.Адмирал?
+            4.Вращение барабана.");
         }
 
         static void DiagonalRead()
@@ -37,12 +42,85 @@ namespace Lesson3
             char[] enteredString = Console.ReadLine().ToCharArray();
             char[] reverseString = new char[enteredString.Length];
             int j = 0;
-            for(int i = enteredString.Length - 1; i >= 0; i--)
+            for (int i = enteredString.Length - 1; i >= 0; i--)
             {
                 reverseString[j] = enteredString[i];
                 j++;
             }
             Console.WriteLine(reverseString);
+        }
+
+        static void SeaFight()
+        {
+            char[,] disposition =
+            {
+                {'X', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O'  },
+                {'O', 'O', 'O', 'X', 'O', 'O', 'O', 'O', 'O', 'O'  },
+                {'O', 'O', 'O', 'X', 'O', 'O', 'O', 'O', 'O', 'X'  },
+                {'O', 'O', 'O', 'O', 'O', 'O', 'O', 'X', 'O', 'X'  },
+                {'X', 'O', 'X', 'X', 'X', 'O', 'O', 'X', 'O', 'O'  },
+                {'X', 'O', 'O', 'O', 'O', 'O', 'O', 'X', 'O', 'O'  },
+                {'O', 'O', 'X', 'X', 'X', 'X', 'O', 'O', 'O', 'O'  },
+                {'O', 'O', 'O', 'O', 'O', 'O', 'O', 'X', 'O', 'O'  },
+                {'O', 'O', 'X', 'O', 'O', 'O', 'O', 'O', 'O', 'O'  },
+                {'O', 'O', 'O', 'O', 'X', 'O', 'O', 'O', 'O', 'O'  },
+            };
+            for (int i = 0; i < 10; i++)
+            {
+                string row = null;
+                for (int j = 0; j < 10; j++)
+                {
+                    row += disposition[i, j];
+                }
+                Console.WriteLine(row);
+            }
+        }
+
+        static void Revolver()
+        {
+            int[] barell = { 1, 2, 3, 4, 5, 6 };
+            int turn;
+            Console.WriteLine("Введите целое число:");
+            if (int.TryParse(Console.ReadLine(), out turn))
+            {
+                int realTurn = turn % 6;
+                int origPos = 0;
+                int destPos;
+                int temp = barell[origPos];
+                int temp2;
+                for (int i = 0; i < barell.Length; i++)
+                {
+                    destPos = origPos + realTurn;
+                    
+
+                    if (destPos < 0)
+                        destPos += 6;
+                    else if (destPos >= 6)
+                        destPos -= 6;
+
+                    temp2 = barell[destPos];
+                    barell[destPos] = temp;
+                    origPos = destPos;
+                    temp = temp2;
+
+                }
+
+                string result = null;
+
+                foreach (int element in barell)
+                {
+                    result += $"{element} ";
+                }
+                Console.WriteLine(result);
+                if(barell[0] == 6)
+                    Console.WriteLine("СЕКТОР ПРИЗ НА БАРАБАНЕ!.. Не удержался...");
+            }
+            else
+            {
+                Console.WriteLine("Введенное Вами значение не является целым числом.");
+                Menu();
+            }
+
         }
 
         class PhoneBook
@@ -89,9 +167,9 @@ namespace Lesson3
 
                 static void ContactList()
                 {
-                    foreach(string[] element in contacts)
+                    foreach (string[] element in contacts)
                     {
-                        if(!string.IsNullOrEmpty(element[0]))
+                        if (!string.IsNullOrEmpty(element[0]))
                         {
                             Console.WriteLine($"{element[0]} {element[1]}");
                         }
@@ -170,7 +248,7 @@ namespace Lesson3
 
                     for (int i = 0; i < list.Length; i++)
                     {
-                        for(int j = 0; j < 2; j++)
+                        for (int j = 0; j < 2; j++)
                         {
                             flat[k++] = list[i][j];
                         }
@@ -181,7 +259,7 @@ namespace Lesson3
                     using (StringWriter stringWriter = new StringWriter())
                     {
                         serializer.Serialize(stringWriter, flat);
-                        xml = stringWriter.ToString();  
+                        xml = stringWriter.ToString();
                     }
                     File.WriteAllText(path, xml, Encoding.Default);
                 }
@@ -200,9 +278,9 @@ namespace Lesson3
                     for (int i = 0; i < 5; i++)
                     {
                         inflatedMass[i] = new string[2];
-                    }    
+                    }
 
-                    foreach(string element in loadedMass)
+                    foreach (string element in loadedMass)
                     {
                         int i = Array.IndexOf(loadedMass, element);
                         if (i % 2 == 0)

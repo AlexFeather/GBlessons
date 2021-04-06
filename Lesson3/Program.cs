@@ -9,7 +9,7 @@ namespace Lesson3
     {
         static void Main(string[] args)
         {
-            PhoneBook.NavMenu();
+            ReverseReading();
         }
 
         static void Menu()
@@ -29,6 +29,20 @@ namespace Lesson3
             {
                 Console.WriteLine(mass1[i, i]);
             }
+        }
+
+        static void ReverseReading()
+        {
+            Console.WriteLine("Введите строку:");
+            char[] enteredString = Console.ReadLine().ToCharArray();
+            char[] reverseString = new char[enteredString.Length];
+            int j = 0;
+            for(int i = enteredString.Length - 1; i >= 0; i--)
+            {
+                reverseString[j] = enteredString[i];
+                j++;
+            }
+            Console.WriteLine(reverseString);
         }
 
         class PhoneBook

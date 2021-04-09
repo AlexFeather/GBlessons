@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace lesson4
 {
@@ -6,7 +7,7 @@ namespace lesson4
     {
         static void Main(string[] args)
         {
-            Ex2Sum.Linebraker();
+            Ex3Seasons.Interface();
         }
     }
 
@@ -46,19 +47,120 @@ namespace lesson4
 
     class Ex2Sum
     {
-        public static void Linebraker()
+        public static void Linebreaker()
         {
             string line = Console.ReadLine();
             string[] splitLine = line.Split(' ');
             int result = 0;
-            for(int i = 0; i < splitLine.Length; i++)
+            for (int i = 0; i < splitLine.Length; i++)
             {
-                if(int.TryParse(splitLine[i], out int number))
+                if (int.TryParse(splitLine[i], out int number))
                 {
                     result += number;
                 }
             }
             Console.WriteLine(result);
+        }
+    }
+
+    //Условие показалось мне слишком уж простым, поэтому я хочу решить эту задачу, используя Dictionary, чтобы потренироваться
+    class Ex3Seasons
+    {
+        static bool initialized = false;
+
+        [Flags]
+        enum Seasons
+        {
+            Зима = 0,
+            Весна,
+            Лето,
+            Осень
+        }
+
+        enum Months
+        {
+            Январь = 1,
+            Февраль,
+            Март,
+            Апрель,
+            Май,
+            Июнь,
+            Июль,
+            Август,
+            Сентябрь,
+            Октябрь,
+            Ноябрь,
+            Декабрь
+        }
+
+        static Dictionary<Months, Seasons> correspondance = new Dictionary<Months, Seasons>();
+
+        static void Initialization()
+        {
+            for (int i = 1; i < 13; i++)
+            {
+                if (i <= 2 | i == 12)
+                {
+                    correspondance.Add((Months)i, Seasons.Зима);
+                }
+                else if (i >=3 & i <= 5)
+                {
+                    correspondance.Add((Months)i, Seasons.Весна);
+                }
+                else if (i >= 6 & i <= 8)
+                {
+                    correspondance.Add((Months)i, Seasons.Лето);
+                }
+                else
+                {
+                    correspondance.Add((Months)i, Seasons.Осень);
+                }
+            }
+            initialized = true;
+        }
+
+        public static void Interface()
+        {
+            if(!initialized)
+            {
+                Initialization();
+            }
+            Console.WriteLine("Введите порядковый номер месяца:");
+            int number;
+            if(int.TryParse(Console.ReadLine(), out number))
+            {
+                if(number >= 1 & number <= 12)
+                {
+                    SeasonPrint(CorrCheck(number));
+                }
+                else
+                {
+                    Console.WriteLine("Введите значение от 1 до 12.");
+                    Interface();
+                }
+            }
+            else
+            {
+                Console.WriteLine("Введенное Вами значение не является целым числом.");
+                Interface();
+            }
+        }
+
+        static Seasons CorrCheck(int number)
+        {
+            if(correspondance.TryGetValue((Months)number, out var result))
+            {
+                return result;
+            }
+            else
+            {
+                throw new Exception("Ошибка при преобразовании месяца в сезон.");
+            }
+        }
+
+        static void SeasonPrint(Seasons season)
+        {
+            Console.WriteLine(season);
         }
     }
 }

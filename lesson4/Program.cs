@@ -6,7 +6,7 @@ namespace lesson4
     {
         static void Main(string[] args)
         {
-
+            Ex2Sum.Linebraker();
         }
     }
 
@@ -39,8 +39,26 @@ namespace lesson4
         public static void GetName()
         {
             Random rnd = new Random();
-            Name name = new Name(lastNames[rnd.Next(0, 9)], names[rnd.Next(0, 9)], patronymics[rnd.Next(0, 9)]);
+            Name name = new Name(lastNames[rnd.Next(0, lastNames.Length - 1)], names[rnd.Next(0, names.Length - 1)], patronymics[rnd.Next(0, patronymics.Length - 1)]);
             name.ViewName();
+        }
+    }
+
+    class Ex2Sum
+    {
+        public static void Linebraker()
+        {
+            string line = Console.ReadLine();
+            string[] splitLine = line.Split(' ');
+            int result = 0;
+            for(int i = 0; i < splitLine.Length; i++)
+            {
+                if(int.TryParse(splitLine[i], out int number))
+                {
+                    result += number;
+                }
+            }
+            Console.WriteLine(result);
         }
     }
 }

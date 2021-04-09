@@ -95,6 +95,7 @@ namespace lesson4
 
         static Dictionary<Months, Seasons> correspondance = new Dictionary<Months, Seasons>();
 
+        //Мне не очень нравится собственное исполнение заполнения словаря, но я не придумал ничего лучше(
         static void Initialization()
         {
             for (int i = 1; i < 13; i++)

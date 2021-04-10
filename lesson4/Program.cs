@@ -7,7 +7,7 @@ namespace lesson4
     {
         static void Main(string[] args)
         {
-            Ex3Seasons.Interface();
+            Ex4Fibonacci.Interface();
         }
     }
 
@@ -95,7 +95,7 @@ namespace lesson4
 
         static Dictionary<Months, Seasons> correspondance = new Dictionary<Months, Seasons>();
 
-        //Мне не очень нравится собственное исполнение заполнения словаря, но я не придумал ничего лучше(
+        //Мне не очень нравится мое заполнения словаря, очень много условий, но я не придумал ничего лучше(
         static void Initialization()
         {
             for (int i = 1; i < 13; i++)
@@ -163,5 +163,35 @@ namespace lesson4
         {
             Console.WriteLine(season);
         }
+    }
+
+    class Ex4Fibonacci
+    {
+        static int i0 = 0;
+        static int i1 = 1;
+
+        public static void Interface()
+        {
+            Console.WriteLine("Введите номер числа Фибоначчи:");
+            if(int.TryParse(Console.ReadLine(), out int result))
+                Console.WriteLine($"Число Фибоначчи: {Calc(result)}");
+            else
+                Console.WriteLine("Введенное Вами значение не является целым числом.");
+        }
+
+        public static int Calc(int n)
+        {
+            if (n == 2)
+                return i1;
+            else
+            {
+                n--;
+                int i2 = Calc(n) + i0;
+                i0 = i1;
+                i1 = i2;
+                return i1;
+            }
+        }
+
     }
 }

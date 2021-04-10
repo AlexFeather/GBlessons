@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design.Serialization;
 
 namespace lesson4
 {
@@ -19,6 +20,42 @@ namespace lesson4
             3. Определение времени года.
             4. Число Фибоначчи.
             5. Нормализация строки.");
+
+            if (int.TryParse(Console.ReadLine(), out int result))
+            {
+                switch (result)
+                {
+                    case 1:
+                        Ex1Names.GetName();
+                        Menu();
+                        break;
+                    case 2:
+                        Ex2Sum.Linebreaker();
+                        Menu();
+                        break;
+                    case 3:
+                        Ex3Seasons.Interface();
+                        Menu();
+                        break;
+                    case 4:
+                        Ex4Fibonacci.Interface();
+                        Menu();
+                        break;
+                    case 5:
+                        Ex5StringNormalize.Normalize();
+                        Menu();
+                        break;
+                    default:
+                        Console.WriteLine("Задания, соответствующего введенному Вами значению, не существует.");
+                        Menu();
+                        break;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Введенное Вами значение не является числом.");
+                Menu();
+            }
         }
     }
 
@@ -179,8 +216,9 @@ namespace lesson4
 
     class Ex4Fibonacci
     {
-        static int i0 = 0;
-        static int i1 = 1;
+        static long i0 = 0;
+        static long i1 = 1;
+        static long i2 = 0;
 
         public static void Interface()
         {
@@ -189,22 +227,29 @@ namespace lesson4
                 Console.WriteLine($"Число Фибоначчи: {Calc(result)}");
             else
                 Console.WriteLine("Введенное Вами значение не является целым числом.");
+            Cleanup();
         }
 
-        public static int Calc(int n)
+        static long Calc(int n)
         {
             if (n == 2)
                 return i1;
             else
             {
                 n--;
-                int i2 = Calc(n) + i0;
+                i2 = Calc(n) + i0;
                 i0 = i1;
                 i1 = i2;
                 return i1;
             }
         }
 
+        static void Cleanup()
+        {
+            i0 = 0;
+            i1 = 1;
+            i2 = 0;
+        }
     }
 
     class Ex5StringNormalize
@@ -213,7 +258,7 @@ namespace lesson4
         static string str2;
         public static void Normalize()
         {
-            Console.WriteLine($"Начальная строка: {str1}.");
+            Console.WriteLine($"Начальная строка: {str1}");
             string[] splitStr = str1.Split(' ');
             for (int i = 0; i < splitStr.Length; i++)
             {

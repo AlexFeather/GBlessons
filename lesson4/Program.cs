@@ -7,7 +7,18 @@ namespace lesson4
     {
         static void Main(string[] args)
         {
-            Ex4Fibonacci.Interface();
+            Menu();
+        }
+
+        static void Menu()
+        {
+            Console.WriteLine(@"
+            Введите номер задания, чтобы увидеть результат его решения:
+            1. Случайное ФИО.
+            2. Сумма чисел в строке.
+            3. Определение времени года.
+            4. Число Фибоначчи.
+            5. Нормализация строки.");
         }
     }
 
@@ -49,6 +60,7 @@ namespace lesson4
     {
         public static void Linebreaker()
         {
+            Console.WriteLine("Введите числа через пробелы:");
             string line = Console.ReadLine();
             string[] splitLine = line.Split(' ');
             int result = 0;
@@ -104,7 +116,7 @@ namespace lesson4
                 {
                     correspondance.Add((Months)i, Seasons.Зима);
                 }
-                else if (i >=3 & i <= 5)
+                else if (i >= 3 & i <= 5)
                 {
                     correspondance.Add((Months)i, Seasons.Весна);
                 }
@@ -122,15 +134,15 @@ namespace lesson4
 
         public static void Interface()
         {
-            if(!initialized)
+            if (!initialized)
             {
                 Initialization();
             }
             Console.WriteLine("Введите порядковый номер месяца:");
             int number;
-            if(int.TryParse(Console.ReadLine(), out number))
+            if (int.TryParse(Console.ReadLine(), out number))
             {
-                if(number >= 1 & number <= 12)
+                if (number >= 1 & number <= 12)
                 {
                     SeasonPrint(CorrCheck(number));
                 }
@@ -149,7 +161,7 @@ namespace lesson4
 
         static Seasons CorrCheck(int number)
         {
-            if(correspondance.TryGetValue((Months)number, out var result))
+            if (correspondance.TryGetValue((Months)number, out var result))
             {
                 return result;
             }
@@ -173,7 +185,7 @@ namespace lesson4
         public static void Interface()
         {
             Console.WriteLine("Введите номер числа Фибоначчи:");
-            if(int.TryParse(Console.ReadLine(), out int result))
+            if (int.TryParse(Console.ReadLine(), out int result))
                 Console.WriteLine($"Число Фибоначчи: {Calc(result)}");
             else
                 Console.WriteLine("Введенное Вами значение не является целым числом.");
@@ -193,5 +205,36 @@ namespace lesson4
             }
         }
 
+    }
+
+    class Ex5StringNormalize
+    {
+        static string str1 = "Предложение один Теперь предложение два Предложение три";
+        static string str2;
+        public static void Normalize()
+        {
+            Console.WriteLine($"Начальная строка: {str1}.");
+            string[] splitStr = str1.Split(' ');
+            for (int i = 0; i < splitStr.Length; i++)
+            {
+                if (i == splitStr.Length - 1)
+                {
+                    splitStr[i] = splitStr[i].Insert(splitStr[i].Length, ". ");
+                    str2 += splitStr[i];
+                }
+                else if (i < splitStr.Length - 1 && char.IsUpper(splitStr[i + 1], 0))
+                {
+                    splitStr[i] = splitStr[i].Insert(splitStr[i].Length, ". ");
+                    str2 += splitStr[i];
+                }
+                else
+                {
+                    splitStr[i] = splitStr[i].Insert(splitStr[i].Length, " ");
+                    str2 += splitStr[i];
+                }
+            }
+
+            Console.WriteLine(str2);
+        }
     }
 }

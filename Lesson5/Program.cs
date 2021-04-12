@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.IO;
 
 namespace Lesson5
@@ -9,7 +10,49 @@ namespace Lesson5
         static void Main(string[] args)
         {
             Ex2CurTimeToFile();
-            Ex4Workers();
+
+        }
+
+        static void Menu()
+        {
+            Console.WriteLine(@"
+            Введите номер задания:
+            1. Запись текста в файл.
+            2. Запись времени в файл.
+            3. Запись чисел в бинарный файл.
+            4. Вывод работников старше 40.");
+
+            if(int.TryParse(Console.ReadLine(), out int result))
+            {
+                switch(result)
+                {
+                    case 1:
+                        Ex1TextToFile();
+                        Menu();
+                        break;
+                    case 2:
+                        Console.WriteLine("Как требуется по заданию, этот алгоритм срабатывает при каждом запуске программы.");
+                        break;
+                    case 3:
+                        Ex3NumsToBinaryFile();
+                        Menu();
+                        break;
+                    case 4:
+                        Ex4Workers();
+                        Menu();
+                        break;
+                    default:
+                        Console.WriteLine("Введенное Вами значение не соответствует ни одному заданию.");
+                        Menu();
+                        break;
+                }
+                    
+            }
+            else 
+            {
+                Console.WriteLine("Введенное Вами значение не является целым числом.");
+                Menu();
+            }
         }
 
         static void Ex1TextToFile()

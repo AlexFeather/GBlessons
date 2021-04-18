@@ -7,7 +7,8 @@ namespace Lesson6
     {
         static void Main(string[] args)
         {
-            TaskManagerMenu();
+            Console.WriteLine(ArraySum(arr1));
+            Console.WriteLine(ArraySum(arr3));
         }
 
         static void TaskManagerMenu()
@@ -155,6 +156,88 @@ namespace Lesson6
         static void ThrowAccessException()
         {
             throw new Exception("Отказано в доступе.");
+        }
+
+        //ex2
+
+        static string[,] arr1 = new string[4, 4]
+            {{"11", "17", "21", "18" },
+             { "56", "4", "6", "130" },
+             { "14", "7", "15", "99" },
+             { "54", "41", "88", "17"}};
+
+        static string[,] arr2 = new string[4, 5]
+            {{"11", "17", "21", "18", "9" },
+             { "56", "4", "6", "130", "7" },
+             { "14", "7", "15", "99", "1" },
+             { "54", "41", "88", "17", "4"}};
+
+        static string[,] arr3 = new string[4, 4]
+            {{"11", "17", "21", "18" },
+             { "56", "4", "afd", "130" },
+             { "14", "7", "15", "99" },
+             { "54", "41", "88", "17"}};
+
+
+        [Serializable]
+        public class ArraySizeException : Exception
+        {
+            public ArraySizeException() { }
+            public ArraySizeException(string message) : base(message)
+            {
+
+            }
+
+        }
+
+        [Serializable]
+        public class ArrayDataException : Exception
+        {
+            string Element;
+            public ArrayDataException() { }
+            public ArrayDataException(string message, string element) : base(message)
+            {
+                Element = element;
+            }
+        }
+
+        static int ArraySum(string[,] array)
+        {
+            int finalResult = 0;
+            if (array.Length == 16)
+            {
+                foreach (string element in array)
+                {
+                    try
+                    {
+                        finalResult += int.Parse(element);
+                        
+                    }
+                    catch
+                    {
+                        throw new ArrayDataException($"Произошла ошибка данных в {GetCoordinates(element, array)}", element);
+                    }
+                    
+                }
+                return finalResult;
+            }
+            else
+            {
+                throw new ArraySizeException("Длина рабочего массива не соответствует необходимой.");
+            }
+        }
+
+        static (int, int) GetCoordinates(string predicate, string[,] array)
+        {
+            for(int i = 0; i < array.GetLength(0); i++)
+            {
+                for(int j = 0; j < array.GetLength(1); j++)
+                {
+                    if (array[i, j].Equals(predicate))
+                        return (i, j);
+                }
+            }
+            return (-1, -1);
         }
     }
 }

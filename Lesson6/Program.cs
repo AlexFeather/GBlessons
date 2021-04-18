@@ -7,8 +7,45 @@ namespace Lesson6
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(ArraySum(arr1));
-            Console.WriteLine(ArraySum(arr3));
+            MainMenu();
+        }
+
+        static void MainMenu()
+        {
+            Console.WriteLine(@"
+Выберите действие:
+1. Диспетчер задач на минималках.
+2. Посчитать сумму чисел в массиве без ошибок.
+3. Попытаться посчитать сумму чисел в слишком большом массиве.
+4. Попытаться посчитать сумму чисел в массиве, где одна из строк - не число.");
+            if(int.TryParse(Console.ReadLine(), out int result))
+            {
+                switch(result)
+                {
+                    case 1:
+                        TaskManagerMenu();
+                        break;
+                    case 2:
+                        ArraySum(arr1);
+                        MainMenu();
+                        break;
+                    case 3:
+                        ArraySum(arr2);
+                        MainMenu();
+                        break;
+                    case 4:
+                        ArraySum(arr3);
+                        MainMenu();
+                        break;
+                    default:
+                        Console.WriteLine("Введенное вами значение не соответствует ни одному из пунктомв меню.");
+                        break;
+                }
+            }
+            else 
+            {
+                Console.WriteLine("Введенное Вами значение не является целым числом.");
+            }
         }
 
         static void TaskManagerMenu()
@@ -17,7 +54,8 @@ namespace Lesson6
 Выберите действие:
 1. Показать список процессов.
 2. Завершить процесс по ID.
-3. Завершить процесс по имени.");
+3. Завершить процесс по имени.
+4. Вернуться в главное меню.");
             if (int.TryParse(Console.ReadLine(), out int result))
             {
                 switch (result)
@@ -33,6 +71,9 @@ namespace Lesson6
                     case 3:
                         KillProcess(GetName());
                         TaskManagerMenu();
+                        break;
+                    case 4:
+                        MainMenu();
                         break;
                     default:
                         Console.WriteLine("Введенное Вами значение не соответствует ни одному из пунктов меню.");

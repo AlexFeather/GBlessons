@@ -1,4 +1,5 @@
 ﻿using System;
+using Lesson8Library;
 
 namespace Lesson_8
 {
@@ -6,7 +7,7 @@ namespace Lesson_8
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Greetings.Greet();
         }
     }
 }

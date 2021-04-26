@@ -6,4 +6,12 @@
     <RootNamespace>Lesson_8</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Lesson8Library\Lesson8Library.csproj" />
+  </ItemGroup>
+
 </Project>

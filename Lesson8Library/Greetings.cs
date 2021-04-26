@@ -4,7 +4,7 @@ namespace Lesson8Library
 {
     public class Greetings
     {
-        public void Greet()
+        public static void Greet()
         {
             Console.WriteLine("Приветствую!");
         }

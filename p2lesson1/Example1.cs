@@ -2,7 +2,7 @@
 
 namespace p2lesson1
 {
-    class Program
+    class Example1
     {
         public class TestCase
         {

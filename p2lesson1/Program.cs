@@ -4,11 +4,73 @@ namespace p2lesson1
 {
     class Program
     {
+        public class TestCase
+        {
+            public int n { get; set; }
+            public bool ExpectedOutcome;
 
+        }
 
         static void Main(string[] args)
         {
-            BlockSchemeMethod();
+            TestCase Case1 = new TestCase
+            {
+                n = 5,
+                ExpectedOutcome = true
+            };
+
+            TestCase Case2 = new TestCase
+            {
+                n = 11,
+                ExpectedOutcome = true
+            };
+
+            TestCase Case3 = new TestCase
+            {
+                n = 12,
+                ExpectedOutcome = false
+            };
+
+            TestCase Case4 = new TestCase
+            {
+                n = 133,
+                ExpectedOutcome = false
+            };
+
+            TestCase Case5 = new TestCase
+            {
+                n = 109,
+                ExpectedOutcome = true
+            };
+
+            TestMethod(Case1);
+            TestMethod(Case2);
+            TestMethod(Case3);
+            TestMethod(Case4);
+            TestMethod(Case5);
+
+        }
+
+        static void TestMethod(TestCase Case)
+        {
+            try
+            {
+                var actual = IsPrimeNumber(Case.n);
+
+                if (actual == Case.ExpectedOutcome)
+                {
+                    Console.WriteLine("VALID TEST");
+                }
+                else
+                {
+                    Console.WriteLine("INVALID TEST");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("INVALID TEST");
+            }
+
         }
 
         static int Input()
@@ -24,13 +86,13 @@ namespace p2lesson1
             }
         }
 
-        static void BlockSchemeMethod()
+        static bool IsPrimeNumber(int n)
         {
-            int n;
+            //int n;
             int d = 0;
             int i;
 
-            n = Input();
+            //n = Input();
 
             for (i = 2; i < n; i++)
             {
@@ -41,11 +103,10 @@ namespace p2lesson1
             }
 
             if (d == 0)
-                Console.WriteLine("Простое");
+                return true;
             else
-                Console.WriteLine("Не простое");
+                return false;
 
         }
-
     }
 }

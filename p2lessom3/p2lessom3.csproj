@@ -3,8 +3,8 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>p2lesson3</AssemblyName>
-    <RootNamespace>p2lesson3</RootNamespace>
+    <AssemblyName>p2lessom3</AssemblyName>
+    <RootNamespace>p2lessom3</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,0 +1,6 @@
+|                                    Method |      Mean |     Error |    StdDev |    Median |
+|------------------------------------------ |----------:|----------:|----------:|----------:|
+|                'Lenght Float using class' | 0.3316 ns | 0.0112 ns | 0.0094 ns | 0.3291 ns |
+|               'Lenght Float using struct' | 0.0026 ns | 0.0080 ns | 0.0067 ns | 0.0000 ns |
+|    'Lenght Double using struct with sqrt' | 0.3140 ns | 0.0146 ns | 0.0129 ns | 0.3108 ns |
+| 'Lenght Double using struct without sqrt' | 0.3445 ns | 0.0275 ns | 0.0257 ns | 0.3399 ns |

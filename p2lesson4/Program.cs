@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using BenchmarkDotNet;
+using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Running;
 
 namespace p2lesson4
 {
@@ -9,10 +10,12 @@ namespace p2lesson4
     {
         static void Main(string[] args)
         {
-            
+
             Example1 ex1 = new Example1();
+
             ex1.FillArray();
-            HashSet<string> ts = ex1.MakeHashSet();
+            HashSet<int> ts = ex1.MakeHashSet();
+
 
         }
 
@@ -24,20 +27,43 @@ namespace p2lesson4
         string[] stringArray = new string[10000];
         Random rd = new Random();
 
+        public bool IsContainsString(string str)
+        {
+            foreach (string element in stringArray)
+            {
+                if (element.Equals(str))
+                    return true;
+            }
+            return false;
+        }
+
+        public bool IsContainsStringByHash(string str, HashSet<int> ts)
+        {
+            int hash = str.GetHashCode();
+            foreach (int element in ts)
+            {
+                if (element.Equals(hash))
+                {
+                    return true;
+                }
+
+            }
+            return false;
+        }
 
         public void FillArray()
         {
-            for(int i = 0; i < stringArray.Length; i++)
+            for (int i = 0; i < stringArray.Length; i++)
             {
                 stringArray[i] = MakeRandomString();
             }
         }
 
-        private string MakeRandomString()
+        public string MakeRandomString()
         {
             StringBuilder sb = new StringBuilder();
             string newString = null;
-            for(int i = 0; i < 10; i++)
+            for (int i = 0; i < 10; i++)
             {
                 sb.Append(Convert.ToChar(rd.Next(65, 90)));
             }
@@ -47,20 +73,20 @@ namespace p2lesson4
 
         public void PrintArray()
         {
-            foreach(string element in stringArray)
+            foreach (string element in stringArray)
             {
                 Console.WriteLine($"{element} ");
             }
         }
 
 
-        public HashSet<string> MakeHashSet()
+        public HashSet<int> MakeHashSet()
         {
-            var ts = new HashSet<string>();
+            var ts = new HashSet<int>();
             foreach (string element in stringArray)
             {
                 int temp = element.GetHashCode();
-                ts.Add(temp.ToString());
+                ts.Add(temp);
             }
             return ts;
         }
@@ -75,9 +101,23 @@ namespace p2lesson4
 
         class Benchmark
         {
-            [Benchmark(Description = "")]
-
-
+            [Benchmark(Description = "sraight search")]
+            public void Test1()
+            {
+                Example1 ex1 = new Example1();
+                string str = ex1.MakeRandomString();
+                ex1.IsContainsString(str);
+            }
+            [Benchmark(Description = "hash search")]
+            public void Test2(HashSet<int> hash)
+            {
+                Example1 ex1 = new Example1();
+                string str = ex1.MakeRandomString();
+                ex1.IsContainsStringByHash(str, hash);
+            }
         }
+
+        [TestClass]
+        public class UnitTest1
     }
 }

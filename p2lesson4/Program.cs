@@ -1,8 +1,8 @@
-﻿using System;
+﻿using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Running;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Running;
 
 namespace p2lesson4
 {
@@ -10,11 +10,12 @@ namespace p2lesson4
     {
         static void Main(string[] args)
         {
+            Example1.UnitTest1 ut1 = new Example1.UnitTest1();
+            ut1.TestMethod();
 
-            Example1 ex1 = new Example1();
 
-            ex1.FillArray();
-            HashSet<int> ts = ex1.MakeHashSet();
+
+
 
 
         }
@@ -22,10 +23,11 @@ namespace p2lesson4
 
     }
 
-    class Example1
+    public class Example1
     {
         string[] stringArray = new string[10000];
         Random rd = new Random();
+        HashSet<int> hs;
 
         public bool IsContainsString(string str)
         {
@@ -37,10 +39,10 @@ namespace p2lesson4
             return false;
         }
 
-        public bool IsContainsStringByHash(string str, HashSet<int> ts)
+        public bool IsContainsStringByHash(string str)
         {
             int hash = str.GetHashCode();
-            foreach (int element in ts)
+            foreach (int element in hs)
             {
                 if (element.Equals(hash))
                 {
@@ -80,15 +82,14 @@ namespace p2lesson4
         }
 
 
-        public HashSet<int> MakeHashSet()
+        public void MakeHashSet()
         {
-            var ts = new HashSet<int>();
             foreach (string element in stringArray)
             {
                 int temp = element.GetHashCode();
-                ts.Add(temp);
+                hs.Add(temp);
             }
-            return ts;
+
         }
 
         public void PrintHashSet(HashSet<string> ts)
@@ -99,25 +100,34 @@ namespace p2lesson4
             }
         }
 
-        class Benchmark
+        public class Benchmark
         {
+            Example1 ex1 = new Example1();
+            ex1.FillArray();
+                ex1.MakeHashSet();
             [Benchmark(Description = "sraight search")]
             public void Test1()
             {
-                Example1 ex1 = new Example1();
                 string str = ex1.MakeRandomString();
                 ex1.IsContainsString(str);
             }
             [Benchmark(Description = "hash search")]
-            public void Test2(HashSet<int> hash)
+            public void Test2()
             {
-                Example1 ex1 = new Example1();
                 string str = ex1.MakeRandomString();
-                ex1.IsContainsStringByHash(str, hash);
+                ex1.IsContainsStringByHash(str);
             }
         }
 
-        [TestClass]
+
         public class UnitTest1
+        {
+            public void TestMethod()
+            {
+                Example1 ex1 = new Example1();
+
+                BenchmarkRunner.Run<Benchmark>();
+            }
+        }
     }
 }

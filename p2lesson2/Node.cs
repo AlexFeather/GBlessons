@@ -29,7 +29,7 @@ namespace p2lesson2
         int GetCount(); // возвращает количество элементов в списке
         void AddNode(int value);  // добавляет новый элемент списка
         void AddNodeAfter(Node node, int value); // добавляет новый элемент списка после определённого элемента
-        void RemoveNode(int index); // удаляет элемент по порядковому номеру
+        void RemoveNodeByIndex(int index); // удаляет элемент по порядковому номеру
         void RemoveNode(Node node); // удаляет указанный элемент
         Node FindNode(int searchValue); // ищет элемент по его значению
     }
@@ -45,8 +45,8 @@ namespace p2lesson2
             if (FirstNode == null)
             {
                 Node newNode = new Node(value);
-                ChangeFirstNode(newNode);
-                ChangeLastNode(newNode);
+                FirstNode = newNode;
+                LastNode = newNode;
                 Length++;
             }
             else
@@ -54,7 +54,7 @@ namespace p2lesson2
                 Node newNode = new Node(value);
                 LastNode.ChangeNextNode(newNode);
                 newNode.ChangePrevNode(LastNode);
-                ChangeLastNode(newNode);
+                LastNode = newNode;
                 Length++;
             }
         }
@@ -97,19 +97,12 @@ namespace p2lesson2
         {
             Node prev = node.PrevNode;
             Node next = node.NextNode;
-            prev.ChangeNextNode(next);
-            next.ChangePrevNode(prev);
+            if (prev != null)
+                prev.ChangeNextNode(next);
+            if (next != null)
+                next.ChangePrevNode(prev);
         }
 
-        private void ChangeFirstNode(Node node)
-        {
-            FirstNode = node;
-        }
-
-        private void ChangeLastNode(Node node)
-        {
-            LastNode = node;
-        }
 
         public Node FindNodeByIndex(int index)
         {

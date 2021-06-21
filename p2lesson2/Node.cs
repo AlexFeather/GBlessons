@@ -27,10 +27,10 @@ namespace p2lesson2
     public interface IChainList
     {
         int GetCount(); // возвращает количество элементов в списке
-        void AddLast(int value);  // добавляет новый элемент списка в конец
-        void AddFirst(int value);  // добавляет новый элемент списка в начало
-        void AddNodeAfter(Node node, int value); // добавляет новый элемент списка после определённого элемента
-        void RemoveNodeByIndex(int index); // удаляет элемент по порядковому номеру
+        Node AddLast(int value);  // добавляет новый элемент списка в конец
+        Node AddFirst(int value);  // добавляет новый элемент списка в начало
+        Node AddNodeAfter(Node node, int value); // добавляет новый элемент списка после определённого элемента
+        bool RemoveNodeByIndex(int index); // удаляет элемент по порядковому номеру
         void RemoveNode(Node node); // удаляет указанный элемент
         Node FindNode(int searchValue); // ищет элемент по его значению
     }
@@ -82,13 +82,21 @@ namespace p2lesson2
 
         public Node AddNodeAfter(Node node, int value)
         {
-            Node newNode = new Node(value);
-            Node nextNode = node.NextNode;
-            newNode.ChangeNextNode(nextNode);
-            newNode.ChangePrevNode(node);
-            node.ChangeNextNode(newNode);
-            nextNode.ChangePrevNode(newNode);
-            return newNode;
+            if (node.NextNode == null)
+            {
+                Node newNode = AddLast(value);
+                return newNode;
+            }
+            else
+            {
+                Node newNode = new Node(value);
+                Node nextNode = node.NextNode;
+                newNode.ChangeNextNode(nextNode);
+                newNode.ChangePrevNode(node);
+                node.ChangeNextNode(newNode);
+                nextNode.ChangePrevNode(newNode);
+                return newNode;
+            }
         }
 
         public Node FindNode(int searchValue)

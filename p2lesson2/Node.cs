@@ -4,13 +4,23 @@ namespace p2lesson2
 {
     public class Node
     {
-        public int Value { get; private set; }
-        public Node NextNode { get; set; }
-        public Node PrevNode { get; set; }
+        public int Value { get; }
+        public Node NextNode { get; private set; }
+        public Node PrevNode { get; private set; }
 
         public Node(int value)
         {
             Value = value;
+        }
+
+        public void ChangeNextNode(Node nextNode)
+        {
+            NextNode = nextNode;
+        }
+
+        public void ChangePrevNode(Node prevNode)
+        {
+            PrevNode = prevNode;
         }
     }
 
@@ -42,8 +52,8 @@ namespace p2lesson2
             else
             {
                 Node newNode = new Node(value);
-                LastNode.NextNode = newNode;
-                newNode.PrevNode = LastNode;
+                LastNode.ChangeNextNode(newNode);
+                newNode.ChangePrevNode(LastNode);
                 ChangeLastNode(newNode);
                 Length++;
             }
@@ -53,10 +63,10 @@ namespace p2lesson2
         {
             Node newNode = new Node(value);
             Node nextNode = node.NextNode;
-            newNode.NextNode = nextNode;
-            newNode.PrevNode = node;
-            node.NextNode = newNode;
-            nextNode.PrevNode = newNode;
+            newNode.ChangeNextNode(nextNode);
+            newNode.ChangePrevNode(node);
+            node.ChangeNextNode(newNode);
+            nextNode.ChangePrevNode(newNode);
         }
 
         public Node FindNode(int searchValue)
@@ -77,21 +87,18 @@ namespace p2lesson2
             return Length;
         }
 
-        public void RemoveNode(int index)
+        public void RemoveNodeByIndex(int index)
         {
             Node current = FindNodeByIndex(index);
-            Node prev = current.PrevNode;
-            Node next = current.NextNode;
-            prev.NextNode = next;
-            next.PrevNode = prev;
+            RemoveNode(current);
         }
 
         public void RemoveNode(Node node)
         {
             Node prev = node.PrevNode;
             Node next = node.NextNode;
-            prev.NextNode = next;
-            next.PrevNode = prev;
+            prev.ChangeNextNode(next);
+            next.ChangePrevNode(prev);
         }
 
         private void ChangeFirstNode(Node node)

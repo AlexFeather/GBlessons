@@ -109,20 +109,35 @@ namespace p2lesson2
             return Length;
         }
 
-        public void RemoveNodeByIndex(int index)
+        public bool RemoveNodeByIndex(int index)
         {
             Node current = FindNodeByIndex(index);
-            RemoveNode(current);
+            if (current != null)
+            {
+                RemoveNode(current);
+                return true;
+            }
+            else 
+                return false;
         }
 
         public void RemoveNode(Node node)
         {
             Node prev = node.PrevNode;
             Node next = node.NextNode;
+            if(prev == null && next == null)
+            {
+                FirstNode = null;
+                LastNode = null;
+            }
             if (prev != null)
                 prev.ChangeNextNode(next);
+            else
+                FirstNode = next;
             if (next != null)
                 next.ChangePrevNode(prev);
+            else
+                LastNode = prev;
         }
 
 

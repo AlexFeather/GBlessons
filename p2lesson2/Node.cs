@@ -27,7 +27,8 @@ namespace p2lesson2
     public interface IChainList
     {
         int GetCount(); // возвращает количество элементов в списке
-        void AddNode(int value);  // добавляет новый элемент списка
+        void AddLast(int value);  // добавляет новый элемент списка в конец
+        void AddFirst(int value);  // добавляет новый элемент списка в начало
         void AddNodeAfter(Node node, int value); // добавляет новый элемент списка после определённого элемента
         void RemoveNodeByIndex(int index); // удаляет элемент по порядковому номеру
         void RemoveNode(Node node); // удаляет указанный элемент
@@ -36,30 +37,50 @@ namespace p2lesson2
 
     public class ChainList : IChainList
     {
-        Node FirstNode;
-        Node LastNode;
-        int Length;
+        public Node FirstNode { get; private set; }
+        public Node LastNode { get; private set; }
+        public int Length { get; private set; }
 
-        public void AddNode(int value)
+        public Node AddLast(int value)
         {
+            Node newNode = new Node(value);
             if (FirstNode == null)
             {
-                Node newNode = new Node(value);
                 FirstNode = newNode;
                 LastNode = newNode;
                 Length++;
             }
             else
             {
-                Node newNode = new Node(value);
                 LastNode.ChangeNextNode(newNode);
                 newNode.ChangePrevNode(LastNode);
                 LastNode = newNode;
                 Length++;
             }
+            return newNode;
         }
 
-        public void AddNodeAfter(Node node, int value)
+        public Node AddFirst(int value)
+        {
+            Node newNode = new Node(value);
+            if (FirstNode == null)
+            {
+                
+                FirstNode = newNode;
+                LastNode = newNode;
+                Length++;
+            }
+            else
+            {
+                newNode.ChangeNextNode(FirstNode);
+                FirstNode.ChangePrevNode(newNode);
+                FirstNode = newNode;
+                Length++;
+            }
+            return newNode;
+        }
+
+        public Node AddNodeAfter(Node node, int value)
         {
             Node newNode = new Node(value);
             Node nextNode = node.NextNode;
@@ -67,6 +88,7 @@ namespace p2lesson2
             newNode.ChangePrevNode(node);
             node.ChangeNextNode(newNode);
             nextNode.ChangePrevNode(newNode);
+            return newNode;
         }
 
         public Node FindNode(int searchValue)
@@ -82,7 +104,7 @@ namespace p2lesson2
             return null;
         }
 
-        public int GetCount()
+        public int GetCount() //вообще-то в этом методе нет смысла, так как количество элементов списка можно получить, обратившись напрямую к свойству, но по условию задания он должен быть
         {
             return Length;
         }

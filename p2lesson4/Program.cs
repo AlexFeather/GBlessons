@@ -10,12 +10,6 @@ namespace p2lesson4
     {
         static void Main(string[] args)
         {
-            Example1.UnitTest1 ut1 = new Example1.UnitTest1();
-            ut1.TestMethod();
-
-
-
-
 
 
         }
@@ -103,17 +97,23 @@ namespace p2lesson4
         public class Benchmark
         {
             Example1 ex1 = new Example1();
-            ex1.FillArray();
-                ex1.MakeHashSet();
+            public void Init()
+            {
+
+            }
             [Benchmark(Description = "sraight search")]
             public void Test1()
             {
+                ex1.FillArray();
+                ex1.MakeHashSet();
                 string str = ex1.MakeRandomString();
                 ex1.IsContainsString(str);
             }
             [Benchmark(Description = "hash search")]
             public void Test2()
             {
+                ex1.FillArray();
+                ex1.MakeHashSet();
                 string str = ex1.MakeRandomString();
                 ex1.IsContainsStringByHash(str);
             }
@@ -124,10 +124,11 @@ namespace p2lesson4
         {
             public void TestMethod()
             {
-                Example1 ex1 = new Example1();
+                
 
                 BenchmarkRunner.Run<Benchmark>();
             }
+
         }
     }
 }

@@ -4,33 +4,32 @@ namespace p2lesson4
 {
     class Example2
     {
-        class Node
+        class Tree
         {
-            public int Value { get; private set; }
-            public Node Left { get; private set; }
-            public Node Right { get; private set; }
-            public Node Parent { get; private set; }
+            public int Center { get; private set; }
+            public Node Root { get; private set; }
+            public int Size { get; private set; }
 
-            public Node(int value)
+            public void ChangeCenterPoint(int posInLine)
             {
-                Value = value;
+                Center = posInLine;
             }
 
-            public Node AddNode(int value, Node root)
+
+
+            public void Insert(int value)
             {
-                Node node = new Node(value);
                 Node temp = null;
-                if (root == null)
+                if (Root == null)
                 {
-                    root = node;
-                    return root;
+                    Root = new Node(value);
                 }
                 else
                 {
-                    temp = root;
+                    temp = Root;
                     while (temp != null)
                     {
-                        if (node.Value <= temp.Value)
+                        if (value <= temp.Value)
                         {
                             if (temp.Left != null)
                             {
@@ -39,11 +38,11 @@ namespace p2lesson4
                             }
                             else
                             {
-                                temp.Left = node;
-                                return root;
+                                temp.SetLeft(temp.AddNode(value));
+                                return;
                             }
                         }
-                        else if(node.Value > temp.Value)
+                        else if (value > temp.Value)
                         {
                             if (temp.Right != null)
                             {
@@ -52,8 +51,8 @@ namespace p2lesson4
                             }
                             else
                             {
-                                temp.Right = node;
-                                return root;
+                                temp.SetRight(temp.AddNode(value));
+                                return;
                             }
                         }
                         else
@@ -62,8 +61,80 @@ namespace p2lesson4
                         }
                     }
                 }
-                return root;
+                Size++;
+                return;
+            }
+
+            public bool StraightSearch(int value, out Node result)
+            {
+                Node temp;
+                temp = Root;
+                while(temp != null)
+                {
+                    if(temp.Value == value)
+                    {
+                        result = temp;
+                        return true;
+                    }
+                    else if (temp.Value > value)
+                    {
+                        temp = temp.Left;
+                        continue;
+                    }
+                    else
+                    {
+                        temp = temp.Right;
+                        continue;
+                    }
+
+                }
+                result = null;
+                return false;
             }
         }
     }
+
+    class Node
+    {
+        public int Value { get; private set; }
+        public int Width { get; private set; }
+        public int Indent { get; private set; }
+        public Node Left { get; private set; }
+        public Node Right { get; private set; }
+        public Node Parent { get; private set; }
+
+        public Node(int value)
+        {
+            Value = value;
+        }
+
+        private int CalcWidth()
+        {
+            Width = Left.CalcWidth() + Right.CalcWidth() + Value.ToString().Length;
+            return Width;
+        }
+
+        public Node AddNode(int value)
+        {
+            Node node = new Node(value);
+            node.Parent = this;
+            return node;
+        }
+
+        public void SetLeft(Node node)
+        {
+            Left = node;
+        }
+
+        public void SetRight(Node node)
+        {
+            Right = node;
+        }
+
+        public void PrintNode()
+        {
+
+        }
+    }
+}
 }

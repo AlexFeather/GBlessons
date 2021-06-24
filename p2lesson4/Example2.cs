@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
 
 namespace p2lesson4
 {
@@ -14,9 +15,6 @@ namespace p2lesson4
             {
                 Center = posInLine;
             }
-
-
-
             public void Insert(int value)
             {
                 Node temp = null;
@@ -91,6 +89,79 @@ namespace p2lesson4
                 result = null;
                 return false;
             }
+
+            public Node FindMaxValue(Node head)
+            {
+                while(head.Value < head.Right.Value)
+                {
+                    head = head.Right;
+                }
+                return head;
+            }
+
+            public bool Withdraw(Node sentenced)
+            {
+                if(sentenced.Left == null && sentenced.Right == null)
+                {
+                    if(sentenced.Parent.Left == sentenced)
+                    {
+                        sentenced.Parent.NullifyLeft();
+                    }
+                    else
+                    {
+                        sentenced.Parent.NullifyRight();
+                    }
+                    sentenced.NullifyParent();
+                    return true;
+                }
+                else if(sentenced.Left != null && sentenced.Right != null)
+                {
+                    Node temp = FindMaxValue(sentenced.Left);
+                    sentenced.SetValue(temp.Value);
+                    Withdraw(temp);
+                    return true;
+                }
+                else if(sentenced.Left != null && sentenced.Right == null)
+                {
+                    if (sentenced.Parent.Left == sentenced)
+                    {
+                        sentenced.Parent.SetLeft(sentenced.Left);
+                        sentenced.Left.SetParent(sentenced.Parent);
+                        sentenced.NullifyParent();
+                        sentenced.NullifyLeft();
+                    }
+                    else
+                    {
+                        sentenced.Parent.SetRight(sentenced.Left);
+                        sentenced.Left.SetParent(sentenced.Parent);
+                        sentenced.NullifyParent();
+                        sentenced.NullifyLeft();
+                    }
+                }
+                else if (sentenced.Left == null && sentenced.Right != null)
+                {
+                    if (sentenced.Parent.Left == sentenced)
+                    {
+                        sentenced.Parent.SetLeft(sentenced.Left);
+                        sentenced.Right.SetParent(sentenced.Parent);
+                        sentenced.NullifyParent();
+                        sentenced.NullifyRight();
+                    }
+                    else
+                    {
+                        sentenced.Parent.SetRight(sentenced.Left);
+                        sentenced.Right.SetParent(sentenced.Parent);
+                        sentenced.NullifyParent();
+                        sentenced.NullifyRight();
+                    }
+                }
+                else
+                {
+                    throw new Exception("Unexpected outcome in Withdraw method");
+                }
+                return true;
+            }
+
         }
     }
 
@@ -99,6 +170,7 @@ namespace p2lesson4
         public int Value { get; private set; }
         public int Width { get; private set; }
         public int Indent { get; private set; }
+        public int Row { get; private set; }
         public Node Left { get; private set; }
         public Node Right { get; private set; }
         public Node Parent { get; private set; }
@@ -106,6 +178,7 @@ namespace p2lesson4
         public Node(int value)
         {
             Value = value;
+            Row = 0;
         }
 
         private int CalcWidth()
@@ -118,7 +191,23 @@ namespace p2lesson4
         {
             Node node = new Node(value);
             node.Parent = this;
+            Row = Parent.Row + 1;
             return node;
+        }
+
+        public void SetValue(int value)
+        {
+            Value = value;
+        }
+
+        public void SetParent(Node node)
+        {
+            Parent = node;
+        }
+
+        public void NullifyParent()
+        {
+            Parent = null;
         }
 
         public void SetLeft(Node node)
@@ -126,9 +215,19 @@ namespace p2lesson4
             Left = node;
         }
 
+        public void NullifyLeft()
+        {
+            Left = null;
+        }
+
         public void SetRight(Node node)
         {
             Right = node;
+        }
+
+        public void NullifyRight()
+        {
+            Right = null;
         }
 
         public void PrintNode()

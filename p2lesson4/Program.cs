@@ -6,16 +6,7 @@ using System.Text;
 
 namespace p2lesson4
 {
-    class Program
-    {
-        static void Main(string[] args)
-        {
 
-
-        }
-
-
-    }
 
     public class Example1
     {

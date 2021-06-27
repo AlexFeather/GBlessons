@@ -1,25 +1,71 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Reflection.Metadata.Ecma335;
+using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Running;
 
 namespace p2lesson4
 {
+    //здесь решение 4 урока 2 примера. к сожалению, я так и не смог сделать вывод полного древа на консоль, результат моих попыток я сохранил. сбаллансировать древо так же не удалось
 
-
-    class Program
+    public class Program
     {
+
         static void Main(string[] args)
+        {
+
+
+        }
+
+        public class TreeBenchmark
         {
             Tree tree = new Tree();
             Random rnd = new Random();
-            for (int i = 0; i < 20; i++)
+
+            
+            [Benchmark(Description = "Insert test", OperationsPerInvoke = 1)]
+            public void Test1()
             {
-                tree.Insert(rnd.Next(0, 9999));
+                int value = rnd.Next(0, 9999);
+                tree.Insert(value);
             }
-            tree.PrintTree();
-            Console.SetCursorPosition(0, 50);
+            [Benchmark(Description = "Search and Withdraw test")]
+            public void Test2()
+            {
+                int value = rnd.Next(0, 9999);
+                Node sentenced;
+                tree.SearchFor(value, 0, out sentenced);
+                tree.Withdraw(sentenced);
+            }
+            [Benchmark(Description = "Straight Search test")]
+            public void Test3()
+            {
+                int value = rnd.Next(0, 9999);
+                tree.SearchFor(value, 0, out Node result);
+            }
+            [Benchmark(Description = "BFSearch test")]
+            public void Test4()
+            {
+                int value = rnd.Next(0, 9999);
+                tree.SearchFor(value, (Tree.SearchType)1, out Node result);
+            }
+            [Benchmark(Description = "DFSearch test")]
+            public void Test5()
+            {
+                int value = rnd.Next(0, 9999);
+                tree.SearchFor(value, (Tree.SearchType)2, out Node result);
+            }
+
         }
+
+        public class UnitTest2
+        {
+            public void TestMethod()
+            {
+                BenchmarkRunner.Run<TreeBenchmark>();
+            }
+
+        }
+
 
         class Tree
         {
@@ -117,65 +163,72 @@ namespace p2lesson4
 
             public bool Withdraw(Node sentenced)
             {
-                if (sentenced.Left == null && sentenced.Right == null)
+                if (sentenced != null)
                 {
-                    if (sentenced.Parent.Left == sentenced)
+                    if (sentenced.Left == null && sentenced.Right == null)
                     {
-                        sentenced.Parent.NullifyLeft();
+                        if (sentenced.Parent.Left == sentenced)
+                        {
+                            sentenced.Parent.NullifyLeft();
+                        }
+                        else
+                        {
+                            sentenced.Parent.NullifyRight();
+                        }
+                        sentenced.NullifyParent();
+                        return true;
+                    }
+                    else if (sentenced.Left != null && sentenced.Right != null)
+                    {
+                        Node temp = FindMaxValue(sentenced.Left);
+                        sentenced.SetValue(temp.Value);
+                        Withdraw(temp);
+                        return true;
+                    }
+                    else if (sentenced.Left != null && sentenced.Right == null)
+                    {
+                        if (sentenced.Parent.Left == sentenced)
+                        {
+                            sentenced.Parent.SetLeft(sentenced.Left);
+                            sentenced.Left.SetParent(sentenced.Parent);
+                            sentenced.NullifyParent();
+                            sentenced.NullifyLeft();
+                        }
+                        else
+                        {
+                            sentenced.Parent.SetRight(sentenced.Left);
+                            sentenced.Left.SetParent(sentenced.Parent);
+                            sentenced.NullifyParent();
+                            sentenced.NullifyLeft();
+                        }
+                    }
+                    else if (sentenced.Left == null && sentenced.Right != null)
+                    {
+                        if (sentenced.Parent.Left == sentenced)
+                        {
+                            sentenced.Parent.SetLeft(sentenced.Left);
+                            sentenced.Right.SetParent(sentenced.Parent);
+                            sentenced.NullifyParent();
+                            sentenced.NullifyRight();
+                        }
+                        else
+                        {
+                            sentenced.Parent.SetRight(sentenced.Left);
+                            sentenced.Right.SetParent(sentenced.Parent);
+                            sentenced.NullifyParent();
+                            sentenced.NullifyRight();
+                        }
                     }
                     else
                     {
-                        sentenced.Parent.NullifyRight();
+                        throw new Exception("Unexpected outcome in Withdraw method");
                     }
-                    sentenced.NullifyParent();
                     return true;
-                }
-                else if (sentenced.Left != null && sentenced.Right != null)
-                {
-                    Node temp = FindMaxValue(sentenced.Left);
-                    sentenced.SetValue(temp.Value);
-                    Withdraw(temp);
-                    return true;
-                }
-                else if (sentenced.Left != null && sentenced.Right == null)
-                {
-                    if (sentenced.Parent.Left == sentenced)
-                    {
-                        sentenced.Parent.SetLeft(sentenced.Left);
-                        sentenced.Left.SetParent(sentenced.Parent);
-                        sentenced.NullifyParent();
-                        sentenced.NullifyLeft();
-                    }
-                    else
-                    {
-                        sentenced.Parent.SetRight(sentenced.Left);
-                        sentenced.Left.SetParent(sentenced.Parent);
-                        sentenced.NullifyParent();
-                        sentenced.NullifyLeft();
-                    }
-                }
-                else if (sentenced.Left == null && sentenced.Right != null)
-                {
-                    if (sentenced.Parent.Left == sentenced)
-                    {
-                        sentenced.Parent.SetLeft(sentenced.Left);
-                        sentenced.Right.SetParent(sentenced.Parent);
-                        sentenced.NullifyParent();
-                        sentenced.NullifyRight();
-                    }
-                    else
-                    {
-                        sentenced.Parent.SetRight(sentenced.Left);
-                        sentenced.Right.SetParent(sentenced.Parent);
-                        sentenced.NullifyParent();
-                        sentenced.NullifyRight();
-                    }
                 }
                 else
                 {
-                    throw new Exception("Unexpected outcome in Withdraw method");
+                    return false;
                 }
-                return true;
             }
 
             public void CalcIndents()
@@ -208,18 +261,19 @@ namespace p2lesson4
 
             }
 
+            //здесь поиски в ширину и вглубь, решение задания пятого урока
             public Node BFSearch(int value)
             {
                 Queue<Node> queue = new Queue<Node>();
                 queue.Enqueue(Root);
-                while(queue.Count != 0)
+                while (queue.Count != 0)
                 {
                     Node temp = queue.Dequeue();
-                    if(temp.Value == value)
+                    if (temp.Value == value)
                     {
                         return temp;
                     }
-                    else 
+                    else
                     {
                         if (temp.Left != null)
                             queue.Enqueue(temp.Left);
@@ -232,7 +286,7 @@ namespace p2lesson4
 
             public Node DFSearch(int value)
             {
-                Stack<Node> queue = new Stak<Node>();
+                Stack<Node> queue = new Stack<Node>();
                 queue.Push(Root);
                 while (queue.Count != 0)
                 {
@@ -246,137 +300,173 @@ namespace p2lesson4
                         if (temp.Left != null)
                             queue.Push(temp.Left);
                         if (temp.Right != null)
-                            queue.Pop(temp.Right);
+                            queue.Push(temp.Right);
                     }
                 }
                 return null;
             }
 
-
-
-
-        }
-    }
-
-    class Node
-    {
-        public int Value { get; private set; }
-        public int Width { get; private set; }
-        public int Indent { get; private set; }
-        public int Row { get; private set; }
-        public int ValueWidth { get; private set; }
-        public Node Left { get; private set; }
-        public Node Right { get; private set; }
-        public Node Parent { get; private set; }
-
-        public Node(int value)
-        {
-            Value = value;
-        }
-
-        private void CalcValueWidth()
-        {
-            ValueWidth = Value.ToString().Length;
-        }
-
-        public int CalcWidth(Node node)
-        {
-            int result = node.ValueWidth;
-            if (node.Left != null)
+            public enum SearchType
             {
-                result += CalcWidth(node.Left);
+                STRAIGHT = 0,
+                BFS = 1,
+                DFS = 2
             }
-            if (node.Right != null)
+            public bool SearchFor(int value, SearchType type, out Node found)
             {
-                result += CalcWidth(node.Right);
-            }
-            node.Width = result;
-            return result;
-        }
-
-        public Node AddNode(int value)
-        {
-            Node node = new Node(value);
-            node.Parent = this;
-            if (node.Parent != null)
-                node.Row = node.Parent.Row + 1;
-            else
-                Row = 0;
-            node.CalcValueWidth();
-            return node;
-        }
-
-        public void SetValue(int value)
-        {
-            Value = value;
-        }
-
-        public void SetParent(Node node)
-        {
-            Parent = node;
-        }
-
-        public void NullifyParent()
-        {
-            Parent = null;
-        }
-
-        public void SetLeft(Node node)
-        {
-            Left = node;
-        }
-
-        public void NullifyLeft()
-        {
-            Left = null;
-        }
-
-        public void SetRight(Node node)
-        {
-            Right = node;
-        }
-
-        public void NullifyRight()
-        {
-            Right = null;
-        }
-
-        public void SetIndent(int value)
-        {
-            Indent = value;
-        }
-
-        public int CalcIndent(Node node)
-        {
-            int indent = 0;
-            if (node == null)
-                return indent;
-            else
-            {
-                if (Parent.Left == node)
+                switch ((int)type)
                 {
-                    indent = Parent.Indent - Width;
-                    node.Indent = indent;
-                    return indent;
+                    case 0:
+                        if (StraightSearch(value, out Node result))
+                        {
+                            found = result;
+                            return true;
+                        }
+                        else
+                        {
+                            found = null;
+                            return false;
+                        }
+                    case 1:
+                        found = BFSearch(value);
+                        if (found != null)
+                            return true;
+                        else
+                            return false;
+                    case 2:
+                        found = DFSearch(value);
+                        if (found != null)
+                            return true;
+                        else
+                            return false;
+                    default:
+                        throw new Exception("Unknown search type.");
                 }
+
+
+            }
+        }
+
+        class Node
+        {
+            public int Value { get; private set; }
+            public int Width { get; private set; }
+            public int Indent { get; private set; }
+            public int Row { get; private set; }
+            public int ValueWidth { get; private set; }
+            public Node Left { get; private set; }
+            public Node Right { get; private set; }
+            public Node Parent { get; private set; }
+
+            public Node(int value)
+            {
+                Value = value;
+            }
+
+            private void CalcValueWidth()
+            {
+                ValueWidth = Value.ToString().Length;
+            }
+
+            public int CalcWidth(Node node)
+            {
+                int result = node.ValueWidth;
+                if (node.Left != null)
+                {
+                    result += CalcWidth(node.Left);
+                }
+                if (node.Right != null)
+                {
+                    result += CalcWidth(node.Right);
+                }
+                node.Width = result;
+                return result;
+            }
+
+            public Node AddNode(int value)
+            {
+                Node node = new Node(value);
+                node.Parent = this;
+                if (node.Parent != null)
+                    node.Row = node.Parent.Row + 1;
+                else
+                    Row = 0;
+                node.CalcValueWidth();
+                return node;
+            }
+
+            public void SetValue(int value)
+            {
+                Value = value;
+            }
+
+            public void SetParent(Node node)
+            {
+                Parent = node;
+            }
+
+            public void NullifyParent()
+            {
+                Parent = null;
+            }
+
+            public void SetLeft(Node node)
+            {
+                Left = node;
+            }
+
+            public void NullifyLeft()
+            {
+                Left = null;
+            }
+
+            public void SetRight(Node node)
+            {
+                Right = node;
+            }
+
+            public void NullifyRight()
+            {
+                Right = null;
+            }
+
+            public void SetIndent(int value)
+            {
+                Indent = value;
+            }
+
+            public int CalcIndent(Node node)
+            {
+                int indent = 0;
+                if (node == null)
+                    return indent;
                 else
                 {
-                    indent = Parent.Indent + Parent.Width;
-                    node.Indent = indent;
-                    return indent;
+                    if (Parent.Left == node)
+                    {
+                        indent = Parent.Indent - Width;
+                        node.Indent = indent;
+                        return indent;
+                    }
+                    else
+                    {
+                        indent = Parent.Indent + Parent.Width;
+                        node.Indent = indent;
+                        return indent;
+                    }
                 }
+
             }
 
-        }
-
-        public void PrintNode()
-        {
-            Console.SetCursorPosition(Indent, Row);
-            Console.WriteLine(Value);
-            if (Left != null)
-                Left.PrintNode();
-            if (Right != null)
-                Right.PrintNode();
+            public void PrintNode()
+            {
+                Console.SetCursorPosition(Indent, Row);
+                Console.WriteLine(Value);
+                if (Left != null)
+                    Left.PrintNode();
+                if (Right != null)
+                    Right.PrintNode();
+            }
         }
     }
 }

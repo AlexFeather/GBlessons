@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-
+//ExternalSort сделать не успел
 namespace p2lesson8
 {
     class Program

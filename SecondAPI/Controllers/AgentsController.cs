@@ -28,6 +28,12 @@ namespace SecondAPI.Controllers
         {
             return Ok();
         }
+
+        [HttpGet("get/agentsList")]
+        public IActionResult GetAgentsList()
+        {
+            return Ok();
+        }
     }
 
     public class AgentInfo

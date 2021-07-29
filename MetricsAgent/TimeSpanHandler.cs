@@ -1,6 +1,6 @@
 ﻿using Dapper;
-using System.Data;
 using System;
+using System.Data;
 
 namespace MetricsAgent
 {

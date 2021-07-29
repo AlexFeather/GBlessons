@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using MetricsAgent.Metrics;
+using MetricsAgent.Repos;
 using MetricsAgent.Requests;
 using MetricsAgent.Responses;
 using Microsoft.AspNetCore.Http;
@@ -12,22 +14,15 @@ namespace MetricsAgent.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CpuMetricsController : ControllerBase
+    public class RamMetricsController : ControllerBase
     {
-        private ICpuMetricsRepository repository;
+        private RamMetricsRepository repository;
         private readonly IMapper mapper;
 
-        public CpuMetricsController(ICpuMetricsRepository repository, IMapper mapper)
-        {
-            this.repository = repository;
-            this.mapper = mapper;
-        }
-
-
         [HttpPost("create")]
-        public IActionResult Create([FromBody] CpuMetricCreateRequest request)
+        public IActionResult Create([FromBody] RamMetricCreateRequest request)
         {
-            repository.Create(new CpuMetric
+            repository.Create(new RamMetric
             {
                 Time = request.Time,
                 Value = request.Value
@@ -39,20 +34,19 @@ namespace MetricsAgent.Controllers
         [HttpGet("all")]
         public IActionResult GetAll()
         {
-            IList<CpuMetric> metrics = repository.GetAll(); 
+            IList<RamMetric> metrics = repository.GetAll();
 
-            var response = new AllCpuMetricResponse()
+            var response = new AllRamMetricResponse()
             {
-                Metrics = new List<CpuMetricDto>()
+                Metrics = new List<RamMetricDto>()
             };
 
             foreach (var metric in metrics)
             {
-                response.Metrics.Add(mapper.Map<CpuMetricDto>(metric));
+                response.Metrics.Add(mapper.Map<RamMetricDto>(metric));
             }
 
             return Ok(response);
-
         }
     }
 }

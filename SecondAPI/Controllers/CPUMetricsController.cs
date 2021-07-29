@@ -11,27 +11,38 @@ namespace SecondAPI
     [ApiController]
     public class CPUMetricsController : ControllerBase
     {
+        private readonly ILogger<CPUMetricsController> _logger;
+        public CPUMetricsController(ILogger<CPUMetricsController> logger)
+        {
+            _logger = logger;
+            _logger.LogDebug(1, "NLog встроен в CpuMetricsController");
+        }
+
         [HttpGet("agent/{agentId}/from/{fromTime}/to/{toTime}")]
         public IActionResult GetMetricsFromAgent([FromRoute] int agentId, [FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
         {
+            _logger.LogInformation("Выполнен метод GetMetricsFromAgent");
             return Ok();
         }
 
         [HttpGet("cluster/from/{fromTime}/to/{toTime}")]
         public IActionResult GetMetricsFromCluster([FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
         {
+            _logger.LogInformation("Выполнен метод GetMetricsFromCluster");
             return Ok();
         }
 
         [HttpGet("from/{fromTime}/to/{toTime}")]
         public IActionResult GetMetricsFromCPU([FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
         {
+            _logger.LogInformation("Выполнен метод GetMetricsFromCPU");
             return Ok();
         }
 
         [HttpGet("percentile/from/{fromTime}/to/{toTime}")]
         public IActionResult GetMetricsFromCPUInPercentile([FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
         {
+            _logger.LogInformation("Выполнен метод GetMetricsFromCPUInPercentile");
             return Ok();
         }
 

@@ -4,16 +4,20 @@ using NLog;
 using SecondAPI;
 using System;
 using Xunit;
+using Moq;
+using NLog.Fluent;
 
 namespace SecondAPIUnitTest
 {
     public class CPUMetricsTest
     {
-        private CPUMetricsController controller;
+        private SecondAPI.CPUMetricsController controller;
+        private Mock<ILogger<CPUMetricsController>> mock;
 
         public CPUMetricsTest()
         {
-            controller = new CPUMetricsController();
+            mock = new Mock<ILogger<CPUMetricsController>>();
+            controller = new CPUMetricsController(mock.Object);
         }
 
         [Fact]

@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Moq;
 using SecondAPI;
 using Xunit;
 
@@ -6,11 +8,13 @@ namespace SecondAPIUnitTest
 {
     public class RAMMetricsTest
     {
-        RAMMetricsController controller;
+        private RAMMetricsController controller;
+        private Mock<ILogger<RAMMetricsController>> mock;
 
         public RAMMetricsTest()
         {
-            controller = new RAMMetricsController();
+            mock = new Mock<ILogger<RAMMetricsController>>();
+            controller = new RAMMetricsController(mock.Object);
         }
 
         [Fact]

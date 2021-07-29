@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Moq;
 using SecondAPI.Controllers;
 using System;
 using Xunit;
@@ -8,11 +10,14 @@ namespace SecondAPIUnitTest
     public class DotNetMetricsTest
     {
         private DotNetMetricsController controller;
+        private Mock<ILogger<DotNetMetricsController>> mock;
 
         public DotNetMetricsTest()
         {
-            controller = new DotNetMetricsController();
+            mock = new Mock<ILogger<DotNetMetricsController>>();
+            controller = new DotNetMetricsController(mock.Object);
         }
+
 
         [Fact]
         public void GetDotnetMetrics_ReturnsOk()

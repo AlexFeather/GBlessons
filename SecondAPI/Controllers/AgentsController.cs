@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -34,12 +33,5 @@ namespace SecondAPI.Controllers
         {
             return Ok();
         }
-    }
-
-    public class AgentInfo
-    {
-        public int AgentId { get; }
-
-        public Uri AgentAddress { get; }
     }
 }

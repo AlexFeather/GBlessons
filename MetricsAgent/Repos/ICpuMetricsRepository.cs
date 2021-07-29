@@ -12,7 +12,7 @@ namespace MetricsAgent
 
     }
 
-    public class MetricsRepository : ICpuMetricsRepository
+    public class CpuMetricsRepository : ICpuMetricsRepository
     {
         private const string ConnectionString = "Data Source=metrics.db;Version=3;Pooling=true;Max Pool Size=100;";
 

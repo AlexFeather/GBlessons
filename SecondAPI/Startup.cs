@@ -49,5 +49,14 @@ namespace SecondAPI
                 endpoints.MapControllers();
             });
         }
+
+        private void ConfigureSqlLiteConnection(IServiceCollection services)
+        {
+            services.AddControllers();
+            ConfigureSqlLiteConnection(services);
+            services.AddScoped<ICpuMetricsRepository, CpuMetricsRepository>();
+
+        }
+
     }
 }

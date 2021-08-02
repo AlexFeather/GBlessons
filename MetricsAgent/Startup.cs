@@ -12,6 +12,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Data.SQLite;
 using AutoMapper;
+using MetricsAgent.Repos;
+using FluentMigrator.Runner;
 
 namespace MetricsAgent
 {
@@ -24,20 +26,32 @@ namespace MetricsAgent
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        private const string ConnectionString = @"Data Source=metrics.db; Version=3;";
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
             ConfigureSqlLiteConnection(services);
-            services.AddScoped<ICpuMetricsRepository, CpuMetricsRepository>();
+            services.AddSingleton<ICpuMetricsRepository, CpuMetricsRepository>();
+            services.AddSingleton<IDotNetMericsRepository, DotNetMetricsRepository>();
+            services.AddSingleton<IHddMetricsRepository, HddMetricsRepository>();
+            services.AddSingleton<INetMetricsRepository, NetMetricsRepository>();
+            services.AddSingleton<IRamMetricsRepository, RamMetricsRepository>();
             var mapperConfiguration = new MapperConfiguration(mp => mp.AddProfile(new MapperProfile()));
             var mapper = mapperConfiguration.CreateMapper();
             services.AddSingleton(mapper);
+            services.AddFluentMigratorCore()
+                .ConfigureRunner(rb => rb
+                .AddSQLite()
+                .WithGlobalConnectionString(ConnectionString)
+                .ScanIn(typeof(Startup).Assembly).For.Migrations()
+                ).AddLogging(lb => lb
+                .AddFluentMigratorConsole());
         }
 
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IMigrationRunner migrationRunner)
         {
             if (env.IsDevelopment())
             {
@@ -54,6 +68,7 @@ namespace MetricsAgent
             {
                 endpoints.MapControllers();
             });
+            migrationRunner.MigrateUp();
         }
 
         private void PrepareSchema(SQLiteConnection connection)

@@ -83,5 +83,12 @@ namespace MetricsAgent
             }
 
         }
-    }
+
+        public CpuMetric GetLast()
+        {
+            using (var connection = new SQLiteConnection(ConnectionString))
+            {
+                return connection.QuerySingle<CpuMetric>("SELECT Id, Value, Time FROM cpumetrics LIMIT 1");
+            };
+        }
 }

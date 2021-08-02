@@ -71,6 +71,14 @@ namespace MetricsAgent.Repos
 
         }
 
+        public NetMetric GetLast()
+        {
+            using (var connection = new SQLiteConnection(ConnectionString))
+            {
+                return connection.QuerySingle<NetMetric>("SELECT Id, Value, Time FROM netmetrics LIMIT 1");
+            };
+        }
+
         public void Update(NetMetric item)
         {
             using (var connection = new SQLiteConnection(ConnectionString))

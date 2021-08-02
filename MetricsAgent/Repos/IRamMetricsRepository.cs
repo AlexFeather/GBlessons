@@ -71,6 +71,14 @@ namespace MetricsAgent.Repos
 
         }
 
+        public RamMetric GetLast()
+        {
+            using (var connection = new SQLiteConnection(ConnectionString))
+            {
+                return connection.QuerySingle<RamMetric>("SELECT Id, Value, Time FROM rammetrics LIMIT 1");
+            };
+        }
+
         public void Update(RamMetric item)
         {
             using (var connection = new SQLiteConnection(ConnectionString))

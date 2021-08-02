@@ -1,19 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
+using FluentMigrator.Runner;
+using MetricsAgent.Jobs;
+using MetricsAgent.Repos;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System.Data.SQLite;
-using AutoMapper;
-using MetricsAgent.Repos;
-using FluentMigrator.Runner;
+using Quartz;
+using Quartz.Impl;
+using Quartz.Spi;
 
 namespace MetricsAgent
 {
@@ -37,6 +33,15 @@ namespace MetricsAgent
             services.AddSingleton<IHddMetricsRepository, HddMetricsRepository>();
             services.AddSingleton<INetMetricsRepository, NetMetricsRepository>();
             services.AddSingleton<IRamMetricsRepository, RamMetricsRepository>();
+
+            services.AddHostedService<QuartzHostedService>();
+            services.AddSingleton<IJobFactory, SingletonJobFactory>();
+            services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
+            services.AddSingleton<CpuMetricJob>();
+            services.AddSingleton(new JobSchedule(
+                jobType: typeof(CpuMetricJob),
+                cronExpression: "0/5 * * * * ?"));
+
             var mapperConfiguration = new MapperConfiguration(mp => mp.AddProfile(new MapperProfile()));
             var mapper = mapperConfiguration.CreateMapper();
             services.AddSingleton(mapper);
@@ -71,38 +76,7 @@ namespace MetricsAgent
             migrationRunner.MigrateUp();
         }
 
-        private void PrepareSchema(SQLiteConnection connection)
-        {
-            using (var command = new SQLiteCommand(connection))
-            {
-                command.CommandText = "DROP TABLE IF EXISTS cpumetrics";
-                command.CommandText = "DROP TABLE IF EXISTS dotnetmetrics";
-                command.CommandText = "DROP TABLE IF EXISTS hddmetrics";
-                command.CommandText = "DROP TABLE IF EXISTS netmetrics";
-                command.CommandText = "DROP TABLE IF EXISTS rammetrics";
-                command.ExecuteNonQuery();
 
-                command.CommandText = @"CREATE TABLE cpumetrics(id INTEGER PRIMARY KEY,
-                    value INT, time INT)";
-                command.ExecuteNonQuery();
-
-                command.CommandText = @"CREATE TABLE dotnetmetrics(id INTEGER PRIMARY KEY,
-                    value INT, time INT)";
-                command.ExecuteNonQuery();
-
-                command.CommandText = @"CREATE TABLE hddmetrics(id INTEGER PRIMARY KEY,
-                    value INT)";
-                command.ExecuteNonQuery();
-
-                command.CommandText = @"CREATE TABLE netmetrics(id INTEGER PRIMARY KEY,
-                    value INT, time INT)";
-                command.ExecuteNonQuery();
-
-                command.CommandText = @"CREATE TABLE rammetrics(id INTEGER PRIMARY KEY,
-                    value INT, time INT)";
-                command.ExecuteNonQuery();
-            }
-        }
 
         private void ConfigureSqlLiteConnection(IServiceCollection services)
         {

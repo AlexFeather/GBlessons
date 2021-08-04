@@ -16,7 +16,7 @@ namespace MetricsAgent.Jobs
         public DotNetMetricJob(IDotNetMericsRepository repository)
         {
             _repository = repository;
-            _counter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+            _counter = new PerformanceCounter(""); //пока не понял, что здесь нужно писать
         }
         public Task Execute(IJobExecutionContext context)
         {

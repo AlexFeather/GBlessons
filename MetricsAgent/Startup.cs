@@ -41,6 +41,15 @@ namespace MetricsAgent
             services.AddSingleton(new JobSchedule(
                 jobType: typeof(CpuMetricJob),
                 cronExpression: "0/5 * * * * ?"));
+            services.AddSingleton(new JobSchedule(
+                jobType: typeof(HddMetricJob),
+                cronExpression: "0/5 * * * * ?"));
+            services.AddSingleton(new JobSchedule(
+                jobType: typeof(NetMetricJob),
+                cronExpression: "0/5 * * * * ?"));
+            services.AddSingleton(new JobSchedule(
+                jobType: typeof(RamMetricJob),
+                cronExpression: "0/5 * * * * ?"));
 
             var mapperConfiguration = new MapperConfiguration(mp => mp.AddProfile(new MapperProfile()));
             var mapper = mapperConfiguration.CreateMapper();

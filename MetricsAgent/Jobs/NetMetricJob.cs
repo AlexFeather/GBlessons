@@ -21,32 +21,9 @@ namespace MetricsAgent.Jobs
         public Task Execute(IJobExecutionContext context)
         {
             var time = TimeSpan.FromSeconds(DateTimeOffset.UtcNow.ToUnixTimeSeconds());
-            if (NetworkInterface.GetIsNetworkAvailable())
-            {
-                NetworkInterface[] interfaces = NetworkInterface.GetAllNetworkInterfaces();
-                long bytesDownloaded = 0;
-                foreach (NetworkInterface element in interfaces)
-                {
-                    bytesDownloaded += element.GetIPv4Statistics().BytesReceived;
-                }
-                long bytesDownloadedLastTime = 0;
-                try
-                {
-                    bytesDownloadedLastTime = _repository.GetLast().Value;
-                }
-                finally
-                {
-
-                }
-                var downloadSpeed = (int)(bytesDownloaded - bytesDownloadedLastTime);
-                _repository.Create(new Metrics.NetMetric { Value = downloadSpeed, Time = time });
-            }
-            else
-            {
-
-                _repository.Create(new Metrics.NetMetric { Time = time, Value = 0 });
-            }
-
+            var downloadSpeedCounter = new PerformanceCounter("NetworkInterface", "Bytes Recieved/sec");
+            var downloadSpeed = downloadSpeedCounter.NextValue();
+            _repository.Create(new Metrics.NetMetric { Value = (int)downloadSpeed, Time = time });
             return Task.CompletedTask;
         }
     }

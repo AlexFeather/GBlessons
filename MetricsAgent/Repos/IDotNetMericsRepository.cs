@@ -1,10 +1,8 @@
 ﻿using Dapper;
 using MetricsAgent.Metrics;
-using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace MetricsAgent.Repos
 {
@@ -69,6 +67,14 @@ namespace MetricsAgent.Repos
                     });
             }
 
+        }
+
+        public DotNetMetric GetLast()
+        {
+            using (var connection = new SQLiteConnection(ConnectionString))
+            {
+                return connection.QuerySingle<DotNetMetric>("SELECT Id, Value, Time FROM dotnetmetrics LIMIT 1");
+            };
         }
 
         public void Update(DotNetMetric item)
